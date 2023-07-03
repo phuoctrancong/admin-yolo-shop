@@ -38,6 +38,7 @@ export default function Category() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.category);
+  console.log("state", state);
   useEffect(() => {
     dispatch(listCategory({ page }));
   }, [dispatch, page]);
