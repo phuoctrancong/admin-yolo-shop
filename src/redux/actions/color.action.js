@@ -12,7 +12,6 @@ export const listColor = (query) => {
   return async (dispatch) => {
     try {
       const response = await list(query);
-      console.log("ccccccccccc", response);
       dispatch({
         type: types.LIST_COLOR,
         data: response.data,
