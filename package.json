@@ -16,6 +16,7 @@
     "html-react-parser": "^1.4.12",
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
+    "process": "^0.11.10",
     "query-string": "^7.1.1",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.3.1",
@@ -30,8 +31,11 @@
     "web-vitals": "^1.0.1",
     "yarn": "^1.22.18"
   },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
+  },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "PORT=3030 react-scripts  start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -53,5 +57,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-error-overlay": "6.0.9"
   }
 }

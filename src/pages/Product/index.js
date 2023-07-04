@@ -24,12 +24,7 @@ import {
   MinusCircleOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import {
-  formatMoney,
-  formatTime,
-  formatTitle,
-  getBase64,
-} from "../../common/common";
+import { formatMoney, formatTime, getBase64 } from "../../common/common";
 import { listCategory } from "../../redux/actions/category.action";
 import {
   createProduct,
@@ -40,10 +35,9 @@ import {
 } from "../../redux/actions/product.action";
 import { listColor } from "../../redux/actions/color.action";
 import { listSize } from "../../redux/actions/size.action";
-import { BASE_URL, ROOT_URL } from "../../constants/config";
+import { ROOT_URL } from "../../constants/config";
 import BraftEditor from "braft-editor";
 import parse from "html-react-parser";
-import { flatMap, map } from "lodash";
 
 const { Option } = Select;
 
@@ -58,7 +52,6 @@ export default function Product() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [keyword, setKeyword] = useState("");
-  const [subCategories, setSubCategories] = useState([]);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
@@ -68,7 +61,7 @@ export default function Product() {
     } else {
       dispatch(listProduct({ page }));
     }
-  }, [dispatch, page]);
+  }, [dispatch, page, keyword]);
 
   const controls = [
     "bold",
@@ -245,7 +238,7 @@ export default function Product() {
   };
 
   const onFinish = (values) => {
-    console.log("value", values);
+    console.log("🚀 ~ file: index.js:241 ~ onFinish ~ values:", values);
     switch (mode) {
       case "CREATE":
         dispatch(
@@ -290,23 +283,40 @@ export default function Product() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  console.log("fileList", fileList);
 
   const handleChange = ({ fileList }) => setFileList(fileList);
 
   function onChangeCategory(value) {
     console.log(`selected ${value}`);
   }
-  const handleCategoryChange = (categoryId) => {
-    const categories = state.category.items || [];
-    categories.forEach((item) => {
-      if (item.id === categoryId) {
-        setSubCategories(item.subCategories);
-      }
-    });
+  const [parentCategory, setParentCategory] = useState();
+  const [subCategory, setSubCategory] = useState("");
+  const [sub, setSub] = useState([]);
+  useEffect(() => {
+    const categoryId = state.product.item.category?.id;
+    const selectedParentCategory = state.category.items.find(
+      (category) => category.id === categoryId
+    );
+    if (selectedParentCategory) {
+      setSub(selectedParentCategory.subCategories);
+    }
+  }, [state]);
+  const handleParentCategoryChange = (value) => {
+    setParentCategory(value);
+    const selectedParentCategory = state.category.items.find(
+      (category) => category.id === value
+    );
+    if (selectedParentCategory) {
+      setSub(selectedParentCategory.subCategories);
+      form.setFieldValue("subCategoryId", null);
+    } else {
+      setSub([]);
+      form.setFieldValue("subCategoryId", null);
+    }
   };
   function onChangeSubCategory(value) {
     console.log(`selected ${value}`);
+    setSubCategory(value);
   }
 
   function onSearch(val) {
@@ -314,7 +324,6 @@ export default function Product() {
   }
 
   const handlePreview = async (file) => {
-    console.log("object,", file);
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -379,20 +388,19 @@ export default function Product() {
                   showSearch
                   placeholder="Chọn danh mục"
                   optionFilterProp="children"
-                  onChange={handleCategoryChange}
+                  onChange={handleParentCategoryChange}
+                  value={parentCategory}
                   onSearch={onSearch}
                   filterOption={(input, option) =>
                     option.children
                       .toLowerCase()
                       .indexOf(input.toLowerCase()) >= 0
                   }
-                >
-                  {state.category.items?.length
-                    ? state.category.items.map((item) => (
-                        <Option value={item.id}>{item.name}</Option>
-                      ))
-                    : []}
-                </Select>
+                  options={state.category.items.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -414,13 +422,12 @@ export default function Product() {
                       .toLowerCase()
                       .indexOf(input.toLowerCase()) >= 0
                   }
-                >
-                  {subCategories?.length
-                    ? subCategories.map((item) => (
-                        <Option value={item.id}>{item.name}</Option>
-                      ))
-                    : []}
-                </Select>
+                  value={subCategory}
+                  options={sub.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
