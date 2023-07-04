@@ -49,12 +49,12 @@ export const createProduct = (data, cb) => {
 
       if (response.statusCode !== 200) {
         notification.open({
-          message: "Thất bại",
+          message: response?.message || "Thất bại",
           description: response.message,
         });
       } else {
         notification.open({
-          message: "Thành công",
+          message: response?.message || "Thành công",
           description: response.message,
         });
         cb();
@@ -89,18 +89,24 @@ export const updateProduct = (id, data, cb) => {
           keepImages.push(e.name);
         }
       });
+
+      console.log("object", keepImages);
       form.append("keepImages", keepImages);
 
       const response = await update(id, form);
+      console.log(
+        "🚀 ~ file: product.action.js:97 ~ return ~ response:",
+        response
+      );
 
       if (response.statusCode !== 200) {
         notification.open({
-          message: "Thất bại",
+          message: response?.message || "Thất bại",
           description: response.message,
         });
       } else {
         notification.open({
-          message: "Thành công",
+          message: response?.message || "Thành công",
           description: response.message,
         });
         cb();
