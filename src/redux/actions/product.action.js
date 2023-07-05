@@ -89,16 +89,8 @@ export const updateProduct = (id, data, cb) => {
           keepImages.push(e.name);
         }
       });
-
-      console.log("object", keepImages);
-      form.append("keepImages", keepImages);
-
+      form.append("keepImages", JSON.stringify(keepImages));
       const response = await update(id, form);
-      console.log(
-        "🚀 ~ file: product.action.js:97 ~ return ~ response:",
-        response
-      );
-
       if (response.statusCode !== 200) {
         notification.open({
           message: response?.message || "Thất bại",

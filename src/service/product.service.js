@@ -1,20 +1,20 @@
-import axios from '../common/axios';
-import { APIEnum } from '../constants/api.endpoint';
-import { stringify } from 'query-string';
+import axios from "../common/axios";
+import { APIEnum } from "../constants/api.endpoint";
+import { stringify } from "query-string";
 
 export const list = (query) =>
-	axios.get(`${APIEnum.PRODUCT}/list/?${stringify(query)}`);
+  axios.get(`${APIEnum.PRODUCT}/list/?${stringify(query)}`);
 export const create = (data) =>
-	axios.post(`${APIEnum.PRODUCT}/create`, data, {
-		headers: {
-			'Content-Type': 'multipart/form-data',
-		},
-	});
+  axios.post(`${APIEnum.PRODUCT}/create`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data; boundary=something",
+    },
+  });
 export const update = (id, data) =>
-	axios.put(`${APIEnum.PRODUCT}/${id}`, data, {
-		headers: {
-			'Content-Type': 'multipart/form-data',
-		},
-	});
+  axios.put(`${APIEnum.PRODUCT}/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data; boundary=something",
+    },
+  });
 export const remove = (id) => axios.delete(`${APIEnum.PRODUCT}/${id}`);
 export const detail = (id) => axios.get(`${APIEnum.PRODUCT}/${id}`);
