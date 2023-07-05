@@ -43,16 +43,18 @@ export default function Order() {
     },
     {
       title: "Người mua",
-      dataIndex: "user",
-      render: (record) => record.fullname,
+      dataIndex: "address",
+      render: (record) => record?.fullName,
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phone",
+      dataIndex: "address",
+      render: (record) => record?.phone,
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
+      render: (record) => record?.addressLine || null,
     },
     {
       title: "Trạng thái",
@@ -227,6 +229,7 @@ export default function Order() {
     content: () => componentRef.current,
     copyStyles: true,
   });
+  console.log("state.order.item", state.order.item);
   return (
     <MainLayout>
       <h2>Danh sách đơn hàng</h2>
@@ -285,7 +288,7 @@ export default function Order() {
                     marginBottom: 0,
                   }}
                 >
-                  #{state.order.item?.id}
+                  #{state.order.item?.code}
                 </Form.Item>
                 <Form.Item
                   label="Trạng thái đơn hàng"
@@ -314,7 +317,7 @@ export default function Order() {
                     marginBottom: 0,
                   }}
                 >
-                  {state.order.item?.phone}
+                  {state.order.item?.user?.phone}
                 </Form.Item>
                 <Form.Item
                   label="Địa chỉ"
@@ -323,7 +326,7 @@ export default function Order() {
                     marginBottom: 0,
                   }}
                 >
-                  {state.order.item?.address}
+                  {state.order.item?.address?.addressLine}
                 </Form.Item>
               </Col>
               <Col span={24}>
