@@ -376,13 +376,10 @@ export default function Category() {
                         style={{ display: "flex", marginBottom: 8 }}
                         align="baseline"
                       >
-                        <Form.Item label="Tên danh mục con" name="name">
+                        <Form.Item label="Tên danh mục con">
                           <Input disabled value={e?.name} />
                         </Form.Item>
-                        <Form.Item
-                          label="Mô tả danh mục con"
-                          name="description"
-                        >
+                        <Form.Item label="Mô tả danh mục con">
                           <Input disabled value={e?.description} />
                         </Form.Item>
                       </Space>
