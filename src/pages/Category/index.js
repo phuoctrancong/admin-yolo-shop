@@ -42,7 +42,6 @@ export default function Category() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const state = useSelector((state) => state.category);
-  console.log("state", state);
   useEffect(() => {
     dispatch(listCategory({ page }));
   }, [dispatch, page]);
@@ -214,7 +213,8 @@ export default function Category() {
       {/* Modal create / update */}
       <Modal
         title={showTitle(mode)}
-        open={visible}
+        // open={visible}
+        visible={visible}
         onCancel={handleCancel}
         width={1000}
         footer={false}
@@ -324,7 +324,7 @@ export default function Category() {
 
       <Modal
         title={showTitle(mode)}
-        open={visibleDetail}
+        visible={visibleDetail}
         onCancel={handleCancel}
         width={1000}
         footer={false}
@@ -371,17 +371,20 @@ export default function Category() {
                 wrapperCol={{ span: 20 }}
               >
                 {!isEmpty(state.item.subCategories)
-                  ? state.item.subCategories.map((e) => (
+                  ? state.item.subCategories.map((e, index) => (
                       <Space
                         style={{ display: "flex", marginBottom: 8 }}
                         align="baseline"
                       >
-                        <Form.Item label="Tên danh mục con" name="name">
+                        <Form.Item
+                          label="Tên danh mục con"
+                          name={["subCategories", index, "name"]}
+                        >
                           <Input disabled value={e?.name} />
                         </Form.Item>
                         <Form.Item
                           label="Mô tả danh mục con"
-                          name="description"
+                          name={["subCategories", index, "description"]}
                         >
                           <Input disabled value={e?.description} />
                         </Form.Item>

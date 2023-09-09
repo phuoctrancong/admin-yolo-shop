@@ -9,7 +9,8 @@ export const login = (user) => {
       if (response.statusCode !== 200) {
         notification.open({
           message: "Đăng nhập thất bại.",
-          description: response.message,
+          description: response?.message,
+          // style: { backgroundColor: "red", color: "white" },
         });
       } else {
         localStorage.setItem("token", response?.data?.accessToken.token);
@@ -27,6 +28,7 @@ export const login = (user) => {
     } catch (error) {
       console.log(error?.message || error);
       notification.open({
+        icon: "error",
         message: "Đăng nhập thất bại.",
         description: error?.message || error,
       });
