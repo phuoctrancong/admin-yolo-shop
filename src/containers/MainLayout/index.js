@@ -71,7 +71,7 @@ export default function MainLayout({ children }) {
         </div>
         <Menu theme="light" mode="inline" selectedKeys={[`${selecedKey}`]}>
           {routers.map((router, index) => (
-            <Menu.Item key={index} icon={<PlusOutlined />}>
+            <Menu.Item key={index} icon={router.icon}>
               <Link to={router.endpoint} onClick={() => setSelectedKey(index)}>
                 {router.text}
               </Link>

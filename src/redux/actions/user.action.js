@@ -6,9 +6,10 @@ export const listUser = (query) => {
   return async (dispatch) => {
     try {
       const response = await list(query);
+
       dispatch({
         type: types.LIST_USER,
-        data: response.data,
+        data: response?.data || [],
       });
     } catch (error) {
       console.log(error?.message || error);

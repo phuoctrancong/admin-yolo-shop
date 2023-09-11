@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "../../containers/MainLayout";
-import { Table, Pagination, Switch } from "antd";
+import { Table, Pagination, Switch, Row, Col, Input, Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { formatTime } from "../../common/common";
 import { UserStatus } from "./user-status.const";
@@ -10,9 +10,14 @@ export default function User() {
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const state = useSelector((state) => state.user);
+  const [keyword, setKeyword] = useState("");
   useEffect(() => {
-    dispatch(listUser({ page }));
-  }, [dispatch, page]);
+    if (keyword) {
+      dispatch(listUser({ page, keyword }));
+    } else {
+      dispatch(listUser({ page }));
+    }
+  }, [dispatch, page, keyword]);
 
   const columns = [
     {
@@ -29,7 +34,7 @@ export default function User() {
     },
     {
       title: "Họ tên",
-      dataIndex: "fullname",
+      dataIndex: "fullName",
     },
     {
       title: "Giới tính",
@@ -84,10 +89,25 @@ export default function User() {
   const onChange = (page) => {
     setPage(page);
   };
+  const onSearchKeyword = (val) => {
+    dispatch(listUser({ page: 1, keyword: val }));
+    setKeyword(val);
+  };
 
+  console.log("🚀 ~ file: index.js:95 ~ User ~ page:", page);
+  console.log("🚀 ~ file: index.js:97 ~ User ~ state?.meta?.total:", state);
   return (
     <MainLayout>
       <h2>Danh sách người dùng</h2>
+      <Row gutter={[16, 16]}>
+        <Col offset={8} span={8} style={{ marginBottom: 20 }}>
+          <Input.Search
+            placeholder="Nhập từ khoá"
+            onSearch={onSearchKeyword}
+            enterButton
+          />
+        </Col>
+      </Row>
       <Table columns={columns} dataSource={state?.items} pagination={false} />
       <Pagination
         style={{ marginTop: 10 }}

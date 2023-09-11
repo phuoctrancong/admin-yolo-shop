@@ -105,7 +105,7 @@ export default function Dashboard() {
     dispatch(dashboardOrder(params));
     dispatch(dashboardOrderMoney(params1));
     dispatch(listProductSell({ page: 1, orderSell: -1, limit: 5 }));
-  }, [dispatch]);
+  }, [dispatch, from, from1, to, to1]);
 
   const refreshData = () => {
     const params = {
