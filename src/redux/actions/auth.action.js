@@ -28,7 +28,6 @@ export const login = (user) => {
     } catch (error) {
       console.log(error?.message || error);
       notification.open({
-        icon: "error",
         message: "Đăng nhập thất bại.",
         description: error?.message || error,
       });
