@@ -22,7 +22,11 @@ import {
   detailOrder,
   listOrder,
 } from "../../redux/actions/order.action";
-import { OrderStatus, OrderStatusEnum } from "./order-status.const";
+import {
+  OrderStatus,
+  OrderStatusEnum,
+  PaymentStatus,
+} from "./order-status.const";
 import { useReactToPrint } from "react-to-print";
 
 export default function Order() {
@@ -298,6 +302,15 @@ export default function Order() {
                   }}
                 >
                   {OrderStatus[state.order.item?.status]}
+                </Form.Item>
+                <Form.Item
+                  label="Trạng thái thanh toán"
+                  name="paymentStatus"
+                  style={{
+                    marginBottom: 0,
+                  }}
+                >
+                  {PaymentStatus[state.order.item?.paymentStatus]}
                 </Form.Item>
               </Col>
               <Col span={12}>
