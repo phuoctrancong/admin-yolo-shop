@@ -3,9 +3,9 @@ import { APIEnum } from "../constants/api.endpoint";
 import { stringify } from "query-string";
 
 export const list = (query) =>
-  axios.get(`${APIEnum.PRODUCT}/list/?${stringify(query)}`);
+  axios.get(`${APIEnum.PRODUCT}?${stringify(query)}`);
 export const create = (data) =>
-  axios.post(`${APIEnum.PRODUCT}/create`, data, {
+  axios.post(`${APIEnum.PRODUCT}`, data, {
     headers: {
       "Content-Type": "multipart/form-data; boundary=something",
     },

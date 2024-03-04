@@ -34,16 +34,17 @@ export const createProduct = (data, cb) => {
       form.append("description", data.description);
       form.append("tag", data.tag);
       form.append("price", data.price);
+      form.append("tagId", data.tagId);
       form.append("salePrice", data.salePrice);
       form.append("categoryId", data.categoryId);
       form.append("subCategoryId", data.subCategoryId);
       form.append("productVersions", JSON.stringify(data.productVersions));
       const keepImages = [];
-      data.images.fileList.forEach((e) => {
-        if (e.originFileObj) form.append("images", e.originFileObj);
-        else keepImages.push(e.name);
+      data.attachment.fileList.forEach((e) => {
+        if (e.originFileObj) form.append("attachment", e.originFileObj);
+        else keepImages.push({ id: e.uid });
       });
-      form.append("keepImages", keepImages);
+      form.append("files", keepImages);
       console.log("form", form);
       const response = await create(form);
 
@@ -76,20 +77,21 @@ export const updateProduct = (id, data, cb) => {
       form.append("name", data.name);
       form.append("description", data.description);
       form.append("tag", data.tag);
+      form.append("tagId", data.tagId);
       form.append("price", data.price);
       form.append("salePrice", data.salePrice);
       form.append("categoryId", data.categoryId);
       form.append("subCategoryId", data.subCategoryId);
       form.append("productVersions", JSON.stringify(data.productVersions));
       const keepImages = [];
-      data.images?.fileList?.forEach((e) => {
+      data.attachment?.fileList?.forEach((e) => {
         if (e.originFileObj) {
-          form.append("images", e.originFileObj);
+          form.append("attachment", e.originFileObj);
         } else {
-          keepImages.push(e.name);
+          keepImages.push({ id: e.uid });
         }
       });
-      form.append("keepImages", JSON.stringify(keepImages));
+      form.append("files", JSON.stringify(keepImages));
       const response = await update(id, form);
       if (response.statusCode !== 200) {
         notification.open({

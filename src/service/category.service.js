@@ -3,8 +3,8 @@ import { APIEnum } from "../constants/api.endpoint";
 import { stringify } from "query-string";
 
 export const list = (query) =>
-  axios.get(`${APIEnum.CATEGORY}/list/?${stringify(query)}`);
-export const create = (data) => axios.post(`${APIEnum.CATEGORY}/create`, data);
+  axios.get(`${APIEnum.CATEGORY}?${stringify(query)}`);
+export const create = (data) => axios.post(`${APIEnum.CATEGORY}`, data);
 export const update = (id, data) =>
   axios.put(`${APIEnum.CATEGORY}/${id}`, data);
 export const remove = (id) => axios.delete(`${APIEnum.CATEGORY}/${id}`);

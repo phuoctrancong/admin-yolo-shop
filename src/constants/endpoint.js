@@ -6,6 +6,7 @@ import {
   CoffeeOutlined,
   DollarOutlined,
   AreaChartOutlined,
+  AccountBookOutlined,
 } from "@ant-design/icons";
 export const Endpoint = {
   HOME: "/",
@@ -20,6 +21,7 @@ export const Endpoint = {
   USER: "/user",
   ORDER: "/orders",
   SIZE: "/sizes",
+  TAG: "/tags",
 };
 
 export const routers = [
@@ -32,6 +34,11 @@ export const routers = [
     endpoint: Endpoint.CATEGORY,
     text: "Quản lý danh mục",
     icon: <InsertRowBelowOutlined />,
+  },
+  {
+    endpoint: Endpoint.TAG,
+    text: "Quản lý Tag",
+    icon: <AccountBookOutlined />,
   },
   {
     endpoint: Endpoint.PRODUCT,
@@ -63,6 +70,7 @@ export const routers = [
     text: "Quản lý đơn hàng",
     icon: <ShoppingCartOutlined />,
   },
+
   // {
   //   endpoint: Endpoint.SETTING,
   //   text: "Cài đặt website",

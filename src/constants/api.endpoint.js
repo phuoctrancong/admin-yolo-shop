@@ -14,4 +14,5 @@ export const APIEnum = {
   DASHBOARD: "/dashboard",
   ORDER: "/orders",
   SIZE: "/sizes",
+  TAG: "/tags",
 };

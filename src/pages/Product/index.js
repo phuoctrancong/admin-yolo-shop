@@ -15,6 +15,7 @@ import {
   Select,
   InputNumber,
   Tabs,
+  Image,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -35,9 +36,10 @@ import {
 } from "../../redux/actions/product.action";
 import { listColor } from "../../redux/actions/color.action";
 import { listSize } from "../../redux/actions/size.action";
-import { ROOT_URL } from "../../constants/config";
+import { BASE_URL, ROOT_URL } from "../../constants/config";
 import BraftEditor from "braft-editor";
 import parse from "html-react-parser";
+import { listTag } from "../../redux/actions/tag.actions";
 
 const { Option } = Select;
 
@@ -80,8 +82,19 @@ export default function Product() {
       dataIndex: "id",
     },
     {
+      title: "Hình ảnh",
+      dataIndex: "image",
+      render: (image) => {
+        return <Image width={90} src={`${BASE_URL}/${image}`} />;
+      },
+    },
+    {
       title: "Tên sản phẩm",
       dataIndex: "name",
+    },
+    {
+      title: "Mã sản phẩm",
+      dataIndex: "code",
     },
     {
       title: "Danh mục",
@@ -91,7 +104,9 @@ export default function Product() {
     {
       title: "Thẻ",
       dataIndex: "tag",
-      render: (record) => record,
+      render: (record) => {
+        return `${record?.code}-${record?.name}`;
+      },
     },
     {
       title: "Ngày tạo",
@@ -160,13 +175,13 @@ export default function Product() {
       subCategoryId: state.product.item?.subCategory?.id,
       price: state?.product.item?.price,
       salePrice: state?.product.item?.salePrice || 0,
-      tag: state?.product?.item?.tag,
+      tagId: state?.product?.item?.tag?.id,
       productVersions: state.product.item?.productVersions?.map((e) => ({
         sizeId: e.size.id,
         colorId: e.color.id,
         stockQuantity: e?.stockQuantity,
         price: e?.price,
-        salePrice: e?.salePrice,
+        salePrice: e?.salePrice || 0,
       })),
     });
 
@@ -175,13 +190,14 @@ export default function Product() {
         uid: e.id,
         name: e.url,
         status: "done",
-        url: `${ROOT_URL}/${e.url}`,
-        thumbUrl: `${ROOT_URL}/${e.url}`,
+        url: `${BASE_URL}/${e.id}`,
+        thumbUrl: `${BASE_URL}/${e.id}`,
       }))
     );
   }, [form, state.product.item]);
   const showModal = () => {
     dispatch(listCategory({ page: 1, isGetAll: 1 }));
+    dispatch(listTag({ page: 1, isGetAll: 1 }));
     dispatch(listColor({ page: 1, isGetAll: 1 }));
     dispatch(listSize({ page: 1, isGetAll: 1 }));
     form.resetFields();
@@ -192,6 +208,7 @@ export default function Product() {
 
   const showModalUpdate = (id) => {
     dispatch(listCategory({ page: 1, isGetAll: 1 }));
+    dispatch(listTag({ page: 1, isGetAll: 1 }));
     dispatch(listColor({ page: 1, isGetAll: 1 }));
     dispatch(listSize({ page: 1, isGetAll: 1 }));
     setId(id);
@@ -238,7 +255,7 @@ export default function Product() {
   };
 
   const onFinish = (values) => {
-    console.log("🚀 ~ file: index.js:241 ~ onFinish ~ values:", values);
+    console.log("🚀 ~ onFinish ~ values:", values);
     switch (mode) {
       case "CREATE":
         dispatch(
@@ -247,7 +264,7 @@ export default function Product() {
               ...values,
               description: values.description.toHTML(),
               price: +values?.price,
-              salePrice: +values?.salePrice,
+              salePrice: +values?.salePrice || 0,
             },
             () => {
               setVisible(false);
@@ -259,8 +276,8 @@ export default function Product() {
         );
         break;
       case "UPDATE":
-        if (!values.images?.length) {
-          values.images = { fileList };
+        if (!values.attachment?.length) {
+          values.attachment = { fileList };
         }
         dispatch(
           updateProduct(
@@ -289,9 +306,16 @@ export default function Product() {
   function onChangeCategory(value) {
     console.log(`selected ${value}`);
   }
+
   const [parentCategory, setParentCategory] = useState();
+  const [tag, setTag] = useState();
   const [subCategory, setSubCategory] = useState("");
   const [sub, setSub] = useState([]);
+
+  function onChangeTag(value) {
+    setTag(value);
+    console.log(`selected ${tag}`);
+  }
   useEffect(() => {
     const categoryId = state.product.item.category?.id;
     const selectedParentCategory = state.category.items.find(
@@ -314,6 +338,7 @@ export default function Product() {
       form.setFieldValue("subCategoryId", null);
     }
   };
+
   function onChangeSubCategory(value) {
     console.log(`selected ${value}`);
     setSubCategory(value);
@@ -479,10 +504,26 @@ export default function Product() {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 label="Thẻ"
-                name="tag"
-                rules={[{ required: true, message: "Vui lòng nhập tag" }]}
+                name="tagId"
+                rules={[{ required: true, message: "Vui lòng chọn thẻ" }]}
               >
-                <Input />
+                <Select
+                  showSearch
+                  placeholder="Chọn Tag"
+                  optionFilterProp="children"
+                  onChange={onChangeTag}
+                  value={tag}
+                  onSearch={onSearch}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                  options={state.tag.items.map((item) => ({
+                    label: `${item.name}-${item.code}`,
+                    value: item.id,
+                  }))}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -490,7 +531,7 @@ export default function Product() {
             <Col span={24}>
               <Form.Item
                 label="Ảnh đại diện"
-                name="images"
+                name="attachment"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 20 }}
               >
@@ -676,6 +717,11 @@ export default function Product() {
               </Form.Item>
             </Col>
             <Col span={12}>
+              <Form.Item label="Mã sản phẩm" name="code">
+                {state.product.item?.code}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
               <Form.Item label="Danh mục" name="categoryId">
                 {state.product.item?.category?.name}
               </Form.Item>
@@ -688,14 +734,14 @@ export default function Product() {
           </Row>
           <Col span={12}>
             <Form.Item label="Thẻ " name="tag">
-              {parse(state.product.item?.tag || "")}
+              {parse(state.product.item?.tag?.code || "")}
             </Form.Item>
           </Col>
           <Row gutter={[16, 16]}>
             <Col span={24}>
               <Form.Item
                 label="Ảnh đại diện"
-                name="images"
+                name="attachment"
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 20 }}
               >
